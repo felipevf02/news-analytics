@@ -1,0 +1,27 @@
+name: Daily news collection
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 09:00 America/Sao_Paulo (12:00 UTC; Brazil has no DST currently).
+    - cron: "0 12 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m src.collect
+        env:
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
