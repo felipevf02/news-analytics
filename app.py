@@ -8,6 +8,8 @@ import streamlit as st
 from dotenv import load_dotenv
 from supabase import create_client
 
+from src.config import normalize_supabase_url
+
 load_dotenv()
 st.set_page_config(page_title="Radar de IA", page_icon="🗞️", layout="wide")
 st.title("🗞️ Radar de IA")
@@ -22,7 +24,7 @@ def load_articles() -> pd.DataFrame:
     )
     if not url or not key:
         return pd.DataFrame()
-    client = create_client(url, key)
+    client = create_client(normalize_supabase_url(url), key)
     response = (
         client.table("articles")
         .select("title,description,url,source_name,published_at,fetched_at")

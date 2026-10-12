@@ -8,6 +8,8 @@ import requests
 from dotenv import load_dotenv
 from supabase import Client, create_client
 
+from src.config import normalize_supabase_url
+
 GNEWS_SEARCH_URL = "https://gnews.io/api/v4/search"
 SEARCH_QUERY = '"inteligência artificial" OR "IA generativa" OR "aprendizado de máquina"'
 
@@ -74,7 +76,7 @@ def main() -> int:
     load_dotenv()
     api_key = required_env("GNEWS_API_KEY")
     client = create_client(
-        required_env("SUPABASE_URL"),
+        normalize_supabase_url(required_env("SUPABASE_URL")),
         required_env("SUPABASE_SECRET_KEY"),
     )
     articles = get_articles(api_key)
