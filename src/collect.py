@@ -23,6 +23,7 @@ def get_articles(api_key: str) -> list[dict]:
     # The free GNews plan has a delay; a 36-hour lookback gives the daily job
     # room to catch delayed items. Database upsert makes overlapping runs safe.
     since = datetime.now(timezone.utc) - timedelta(hours=36)
+    since_iso = since.isoformat(timespec="seconds").replace("+00:00", "Z")
     response = requests.get(
         GNEWS_SEARCH_URL,
         params={
@@ -30,12 +31,15 @@ def get_articles(api_key: str) -> list[dict]:
             "lang": "pt",
             "country": "br",
             "max": 10,
-            "from": since.isoformat(timespec="seconds"),
-            "apikey": api_key,
+            "from": since_iso,
         },
+        headers={"X-Api-Key": api_key},
         timeout=30,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise RuntimeError(
+            f"GNews returned HTTP {response.status_code}: {response.text}"
+        )
     return response.json().get("articles", [])
 
 
