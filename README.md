@@ -43,8 +43,13 @@ Conecte este repositório ao Streamlit Community Cloud e configure SUPABASE_URL
 e SUPABASE_PUBLISHABLE_KEY nos Secrets do app. O painel usa acesso somente
 leitura; reserve SUPABASE_SECRET_KEY para o workflow de coleta.
 
-## Estado do MVP
+## Análise textual
 
-A primeira versão armazena e apresenta notícias e volume diário. As análises
-textuais (palavras-chave, entidades e sentimento em PT-BR) serão adicionadas
-com uma biblioteca/modelo de licença aberta e avaliada para português.
+O coletor calcula métricas descritivas em português com Python padrão:
+contagem de palavras, tamanho médio das palavras e termos mais frequentes,
+removendo uma lista de palavras funcionais comuns. Os resultados ficam em
+article_analyses e o painel apresenta estatísticas agregadas.
+
+As métricas se baseiam no título, descrição e trecho retornado pela API; elas
+não representam a análise do artigo completo nem incluem classificação de
+sentimento.

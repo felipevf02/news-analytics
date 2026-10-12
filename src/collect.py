@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from supabase import Client, create_client
 
 from src.config import normalize_supabase_url
+from src.process_analysis import analyze_unprocessed
 
 GNEWS_SEARCH_URL = "https://gnews.io/api/v4/search"
 SEARCH_QUERY = '"inteligência artificial" OR "IA generativa" OR "aprendizado de máquina"'
@@ -81,7 +82,11 @@ def main() -> int:
     )
     articles = get_articles(api_key)
     saved = store_articles(client, articles)
-    print(f"Received {len(articles)} articles; upserted {saved}.")
+    analyzed = analyze_unprocessed(client)
+    print(
+        f"Received {len(articles)} articles; upserted {saved}; "
+        f"analyzed {analyzed} new articles."
+    )
     return 0
 
 

@@ -27,12 +27,23 @@ def load_articles() -> pd.DataFrame:
     client = create_client(normalize_supabase_url(url), key)
     response = (
         client.table("articles")
-        .select("title,description,url,source_name,published_at,fetched_at")
+        .select("id,title,description,url,source_name,published_at,fetched_at")
         .order("published_at", desc=True)
         .limit(1000)
         .execute()
     )
-    return pd.DataFrame(response.data or [])
+    articles = pd.DataFrame(response.data or [])
+    if articles.empty:
+        return articles
+    analysis = (
+        client.table("article_analyses")
+        .select("article_id,word_count,unique_word_count,avg_word_length,top_terms")
+        .execute()
+    )
+    metrics = pd.DataFrame(analysis.data or [])
+    if metrics.empty:
+        return articles
+    return articles.merge(metrics, left_on="id", right_on="article_id", how="left")
 
 
 try:
@@ -75,10 +86,41 @@ daily = (
 st.subheader("Volume diário")
 st.plotly_chart(px.line(daily, x="day", y="notícias", markers=True), use_container_width=True)
 
+st.subheader("Estatísticas do texto")
+analyzed = filtered.dropna(subset=["word_count"])
+if analyzed.empty:
+    st.info("As notícias ainda não foram analisadas. Execute a coleta para processá-las.")
+else:
+    a1, a2, a3 = st.columns(3)
+    a1.metric("Textos analisados", len(analyzed))
+    a2.metric("Média de palavras", f"{analyzed['word_count'].mean():.0f}")
+    a3.metric("Vocabulário médio", f"{analyzed['unique_word_count'].mean():.0f} palavras únicas")
+
+    term_counts: dict[str, int] = {}
+    for terms in analyzed["top_terms"].dropna():
+        for item in terms:
+            term_counts[item["term"]] = term_counts.get(item["term"], 0) + item["count"]
+    if term_counts:
+        top_terms = (
+            pd.DataFrame(
+                sorted(term_counts.items(), key=lambda item: item[1], reverse=True)[:15],
+                columns=["termo", "ocorrências"],
+            )
+        )
+        st.plotly_chart(
+            px.bar(top_terms.sort_values("ocorrências"), x="ocorrências", y="termo", orientation="h"),
+            use_container_width=True,
+        )
+
 st.subheader("Notícias recentes")
 for _, row in filtered.sort_values("published_at", ascending=False).iterrows():
     with st.container(border=True):
         st.markdown(f"**[{row['title']}]({row['url']})**")
         st.caption(f"{row['source_name']} · {row['published_at'].strftime('%d/%m/%Y %H:%M UTC')}")
+        if pd.notna(row.get("word_count")):
+            st.caption(
+                f"Análise: {int(row['word_count'])} palavras · "
+                f"{int(row['unique_word_count'])} palavras distintas"
+            )
         if row.get("description"):
             st.write(row["description"])
