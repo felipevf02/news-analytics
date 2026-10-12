@@ -16,8 +16,8 @@ consulte os termos do provedor antes de publicar ou reutilizar os dados.
 
 ## Configuração local
 
-1. Crie um projeto Supabase e execute o arquivo de migração
-   supabase/migrations/202609230001_create_articles.sql no SQL Editor.
+1. Crie um projeto Supabase e execute os arquivos em
+   supabase/migrations/ no SQL Editor, em ordem alfabética.
 2. Copie .env.example para .env e preencha as chaves da API e do Supabase.
    O painel usa SUPABASE_PUBLISHABLE_KEY; a coleta usa SUPABASE_SECRET_KEY.
 3. Instale as dependências: pip install -r requirements.txt.
