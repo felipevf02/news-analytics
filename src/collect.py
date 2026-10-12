@@ -75,7 +75,7 @@ def main() -> int:
     api_key = required_env("GNEWS_API_KEY")
     client = create_client(
         required_env("SUPABASE_URL"),
-        required_env("SUPABASE_SERVICE_ROLE_KEY"),
+        required_env("SUPABASE_SECRET_KEY"),
     )
     articles = get_articles(api_key)
     saved = store_articles(client, articles)

@@ -19,12 +19,12 @@ consulte os termos do provedor antes de publicar ou reutilizar os dados.
 1. Crie um projeto Supabase e execute o arquivo de migração
    supabase/migrations/202609230001_create_articles.sql no SQL Editor.
 2. Copie .env.example para .env e preencha as chaves da API e do Supabase.
-   O painel usa SUPABASE_ANON_KEY; a coleta usa SUPABASE_SERVICE_ROLE_KEY.
+   O painel usa SUPABASE_PUBLISHABLE_KEY; a coleta usa SUPABASE_SECRET_KEY.
 3. Instale as dependências: pip install -r requirements.txt.
 4. Rode a coleta: python -m src.collect.
 5. Inicie o painel: streamlit run app.py.
 
-Não envie .env nem a chave service_role para o GitHub.
+Não envie .env nem SUPABASE_SECRET_KEY para o GitHub.
 
 ## GitHub Actions
 
@@ -32,7 +32,7 @@ Adicione estes Repository Secrets em Settings → Secrets and variables → Acti
 
 - GNEWS_API_KEY
 - SUPABASE_URL
-- SUPABASE_SERVICE_ROLE_KEY
+- SUPABASE_SECRET_KEY
 
 O workflow .github/workflows/collect-news.yml executa diariamente às 09:00
 no horário de São Paulo e também pode ser iniciado manualmente na aba Actions.
@@ -40,8 +40,8 @@ no horário de São Paulo e também pode ser iniciado manualmente na aba Actions
 ## Publicar o painel
 
 Conecte este repositório ao Streamlit Community Cloud e configure SUPABASE_URL
-e SUPABASE_ANON_KEY nos Secrets do app. O painel usa acesso somente leitura;
-reserve a chave service_role para o workflow de coleta.
+e SUPABASE_PUBLISHABLE_KEY nos Secrets do app. O painel usa acesso somente
+leitura; reserve SUPABASE_SECRET_KEY para o workflow de coleta.
 
 ## Estado do MVP
 

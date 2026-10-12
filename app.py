@@ -17,7 +17,9 @@ st.caption("Notícias sobre inteligência artificial publicadas no Brasil")
 @st.cache_data(ttl=300)
 def load_articles() -> pd.DataFrame:
     url = st.secrets.get("SUPABASE_URL", os.getenv("SUPABASE_URL"))
-    key = st.secrets.get("SUPABASE_ANON_KEY", os.getenv("SUPABASE_ANON_KEY"))
+    key = st.secrets.get(
+        "SUPABASE_PUBLISHABLE_KEY", os.getenv("SUPABASE_PUBLISHABLE_KEY")
+    )
     if not url or not key:
         return pd.DataFrame()
     client = create_client(url, key)
