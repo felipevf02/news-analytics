@@ -43,6 +43,18 @@ Conecte este repositório ao Streamlit Community Cloud e configure SUPABASE_URL
 e SUPABASE_PUBLISHABLE_KEY nos Secrets do app. O painel usa acesso somente
 leitura; reserve SUPABASE_SECRET_KEY para o workflow de coleta.
 
+## Aplicativo desktop
+
+O cliente desktop em Tkinter é separado do painel web e usa somente
+SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY. Ele não deve receber a chave secreta.
+
+1. Instale as dependências com pip install -r requirements.txt.
+2. Configure SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY no arquivo .env local.
+3. Inicie com python desktop_app.py.
+
+O app oferece filtros por período, fonte e texto, além da lista de notícias,
+métricas textuais e links para abrir a matéria no navegador.
+
 ## Análise textual
 
 O coletor calcula métricas descritivas em português com Python padrão:
