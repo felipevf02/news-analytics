@@ -55,6 +55,13 @@ SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY. Ele não deve receber a chave secreta.
 O app oferece filtros por período, fonte e texto, além da lista de notícias,
 métricas textuais e links para abrir a matéria no navegador.
 
+O botão Console SQL abre uma janela para executar SQL diretamente no Postgres
+e aplicar as migrações do repositório. Para essa conexão, configure
+SUPABASE_DB_URL no .env com a connection string PostgreSQL do Supabase e
+sslmode=require. A string contém a senha do banco; mantenha-a apenas no arquivo
+.env local. Na rede IPv4 comum, escolha Session pooler no painel Connect do
+Supabase. A chave publishable não substitui a senha/conexão PostgreSQL.
+
 ## Análise textual
 
 O coletor calcula métricas descritivas em português com Python padrão:

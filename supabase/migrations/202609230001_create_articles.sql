@@ -23,6 +23,8 @@ alter table public.articles enable row level security;
 grant select on table public.articles to anon, authenticated;
 grant select, insert, update on table public.articles to service_role;
 
+drop policy if exists "Public read access to published article metadata"
+    on public.articles;
 create policy "Public read access to published article metadata"
     on public.articles
     for select

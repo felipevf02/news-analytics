@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from supabase import create_client
 
 from src.config import normalize_supabase_url
+from src.sql_console import SQLConsoleWindow
 
 
 APP_BG = "#f3f5f9"
@@ -162,6 +163,10 @@ class RadarDesktop(Tk):
             header, text="Atualizar notícias", style="Accent.TButton", command=self.refresh_data
         )
         self.refresh_button.pack(side="right", anchor="center")
+        self.sql_button = ttk.Button(
+            header, text="Console SQL", command=self.open_sql_console
+        )
+        self.sql_button.pack(side="right", anchor="center", padx=(0, 10))
 
         filters = ttk.Frame(page)
         filters.pack(fill="x", pady=(0, 14))
@@ -425,6 +430,9 @@ class RadarDesktop(Tk):
     def open_selected_article(self) -> None:
         if self.selected_article and self.selected_article.get("url"):
             webbrowser.open(self.selected_article["url"])
+
+    def open_sql_console(self) -> None:
+        SQLConsoleWindow(self)
 
 
 if __name__ == "__main__":
